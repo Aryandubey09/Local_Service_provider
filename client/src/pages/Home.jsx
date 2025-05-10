@@ -17,30 +17,40 @@ const Home = () => {
 
   const userId = localStorage.getItem("userId");
 
-  const increment = () => setCoins(coins + 1);
-  const decrement = () => setCoins(coins - 1);
+  const increment = () => setCoins(coins + 5);
+  const decrement = () => setCoins(coins - 5);
 
-  // Fetch user data on login or when userId changes
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setIsLoggedIn(true);
-      setCoinTrigger(prev => !prev); // Fetch coins when logged in
+      setCoinTrigger(prev => !prev);
     }
   }, []);
 
-  // Handle login logic
+  useEffect(() => {
+    const fetchCoins = async () => {
+      if (!userId) return;
+      try {
+        const res = await axios.get(`http://localhost:5000/api/bookings/user/${userId}/coins`);
+        setCoins(res.data.coins);
+      } catch (err) {
+        console.error("Error fetching coins:", err);
+      }
+    };
+    fetchCoins();
+  }, [coinTrigger, userId]);
+
   const handleLogin = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
     localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("userId", userData._id); // Store userId in localStorage
-    setCoinTrigger(prev => !prev); // Trigger coin fetch after login
+    localStorage.setItem("userId", userData._id);
+    setCoinTrigger(prev => !prev);
   };
 
-  // Handle logout logic
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
@@ -50,7 +60,6 @@ const Home = () => {
     setDropdownOpen(false);
   };
 
-  // Handle booking and updating coin balance
   const handleBook = async () => {
     try {
       const response = await axios.post(
@@ -59,8 +68,8 @@ const Home = () => {
         { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
       );
       if (response.status === 200) {
-        setCoins(prevCoins => prevCoins + 1); // Increment coin count after booking
-        setCoinTrigger(prev => !prev); // Trigger coin fetch after booking
+        setCoins(prevCoins => prevCoins + 5); // ✅ increase by 5
+        setCoinTrigger(prev => !prev);
       }
     } catch (error) {
       console.error("Error booking:", error);
@@ -140,7 +149,7 @@ const Home = () => {
       <section className="py-16 bg-gray-400 text-center">
         <h2 className="text-2xl font-bold mb-8">How It Works</h2>
         <div className="flex justify-center gap-10 flex-wrap">
-          {[ 
+          {[
             { step: '1', title: 'Search', desc: 'Find professionals in your area' },
             { step: '2', title: 'Book', desc: 'Choose a provider and schedule' },
             { step: '3', title: 'Get Service', desc: 'Get the job done, hassle-free' }
@@ -159,7 +168,7 @@ const Home = () => {
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-2xl font-bold mb-8">Why Choose Us</h2>
         <div className="flex justify-center gap-10 flex-wrap">
-          {[ 
+          {[
             { title: 'Verified Professionals', icon: '🛡️' },
             { title: 'Customer Ratings', icon: '⭐' },
             { title: 'Fast and Easy Booking', icon: '⏱️' }
