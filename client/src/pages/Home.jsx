@@ -5,46 +5,73 @@ import HeroSection from '../components/HeroSection';
 import CustmoerReviews from '../components/CustmoerReviews';
 import SignInModel from '../components/SignInModel';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [coins, setCoins] = useState(0);
+  const [coinTrigger, setCoinTrigger] = useState(false);
 
+  const userId = localStorage.getItem("userId");
+
+  const increment = () => setCoins(coins + 1);
+  const decrement = () => setCoins(coins - 1);
+
+  // Fetch user data on login or when userId changes
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
       setIsLoggedIn(true);
+      setCoinTrigger(prev => !prev); // Fetch coins when logged in
     }
   }, []);
 
+  // Handle login logic
   const handleLogin = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
     localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("userId", userData._id); // Store userId in localStorage
+    setCoinTrigger(prev => !prev); // Trigger coin fetch after login
   };
 
+  // Handle logout logic
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
     localStorage.removeItem("user");
+    localStorage.removeItem("userId");
     localStorage.removeItem("authToken");
     setDropdownOpen(false);
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(prev => !prev);
+  // Handle booking and updating coin balance
+  const handleBook = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/bookings`,
+        { userId },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
+      );
+      if (response.status === 200) {
+        setCoins(prevCoins => prevCoins + 1); // Increment coin count after booking
+        setCoinTrigger(prev => !prev); // Trigger coin fetch after booking
+      }
+    } catch (error) {
+      console.error("Error booking:", error);
+    }
   };
 
-  const closeDropdown = () => {
-    setDropdownOpen(false);
-  };
+  const toggleDropdown = () => setDropdownOpen(prev => !prev);
+  const closeDropdown = () => setDropdownOpen(false);
 
   return (
     <div className="font-sans min-h-screen relative" onClick={closeDropdown}>
-      {/* Sign In Button */}
       {!isLoggedIn && (
         <button
           className="fixed top-4 right-4 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 z-50"
@@ -57,7 +84,12 @@ const Home = () => {
         </button>
       )}
 
-      {/* Avatar + Dropdown */}
+      {user && (
+        <div className="fixed top-4 right-24 bg-yellow-300 px-3 py-1 rounded-full shadow z-50 font-semibold text-sm">
+          🪙 Coins: {coins}
+        </div>
+      )}
+
       {user && (
         <div className="fixed top-4 right-4 z-50" onClick={(e) => e.stopPropagation()}>
           <div
@@ -87,7 +119,6 @@ const Home = () => {
         </div>
       )}
 
-      {/* Your Bookings Button (top-left) */}
       {user && (
         <Link
           to="/user-bookings"
@@ -97,22 +128,19 @@ const Home = () => {
         </Link>
       )}
 
-      {/* Sign In Modal */}
       <SignInModel
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onLogin={handleLogin}
       />
 
-      {/* Main Sections */}
       <HeroSection />
-      <CategoriesSection />
+      <CategoriesSection coins={coins} increment={increment} />
 
-      {/* How it Works */}
-      <section className="py-16 text-center">
+      <section className="py-16 bg-gray-400 text-center">
         <h2 className="text-2xl font-bold mb-8">How It Works</h2>
         <div className="flex justify-center gap-10 flex-wrap">
-          {[
+          {[ 
             { step: '1', title: 'Search', desc: 'Find professionals in your area' },
             { step: '2', title: 'Book', desc: 'Choose a provider and schedule' },
             { step: '3', title: 'Get Service', desc: 'Get the job done, hassle-free' }
@@ -126,14 +154,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Customer Reviews */}
       <CustmoerReviews />
 
-      {/* Why Choose Us */}
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-2xl font-bold mb-8">Why Choose Us</h2>
         <div className="flex justify-center gap-10 flex-wrap">
-          {[
+          {[ 
             { title: 'Verified Professionals', icon: '🛡️' },
             { title: 'Customer Ratings', icon: '⭐' },
             { title: 'Fast and Easy Booking', icon: '⏱️' }
@@ -141,14 +167,13 @@ const Home = () => {
             <div key={i} className="bg-white p-6 rounded-xl shadow-md w-64">
               <div className="text-4xl mb-2">{item.icon}</div>
               <h3 className="font-semibold mb-1">{item.title}</h3>
-              <p className="text-gray-600 text-sm">{item.title} and more</p>
+              <p className="text-gray-500 text-sm">{item.title} and more</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-green-400 text-black py-6 text-center">
+      <footer className="bg-green-700 text-black py-6 text-center">
         <div className="flex justify-center gap-8 flex-wrap">
           <a href="#" className="hover:underline">About</a>
           <a href="#" className="hover:underline">Contact</a>
@@ -160,8 +185,6 @@ const Home = () => {
           <i className="fab fa-instagram"></i>
         </div>
       </footer>
-
-      {console.log(localStorage.getItem("provider"))}
     </div>
   );
 };

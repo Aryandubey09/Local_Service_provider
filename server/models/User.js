@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ["Plumber", "Carpenter", "Cleaner", "Electrician"],
-    required: function () { return this.role === "provider"; } // ✅ Required only for providers
+    required: function () { return this.role === "provider"; } 
+  },
+  coins: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

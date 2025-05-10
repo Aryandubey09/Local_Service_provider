@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { FaComments } from "react-icons/fa";
+import ChatPopup from "../pages/ChatPopup"; // adjust path as needed
 
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [providerId, setProviderId] = useState(null);
+  const [chatOpenFor, setChatOpenFor] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +22,6 @@ const UserBookings = () => {
 
   useEffect(() => {
     if (!providerId) return;
-
     const fetchBookings = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/bookings/${providerId}`);
@@ -28,7 +30,6 @@ const UserBookings = () => {
         console.error("Error fetching bookings:", err);
       }
     };
-
     fetchBookings();
   }, [providerId]);
 
@@ -36,9 +37,7 @@ const UserBookings = () => {
     try {
       await axios.put(`http://localhost:5000/api/bookings/${bookingId}/accept`);
       setBookings((prev) =>
-        prev.map((b) =>
-          b._id === bookingId ? { ...b, status: "accepted" } : b
-        )
+        prev.map((b) => b._id === bookingId ? { ...b, status: "accepted" } : b)
       );
     } catch (err) {
       console.error("Error accepting booking:", err);
@@ -54,15 +53,11 @@ const UserBookings = () => {
     }
   };
 
-  const handleBack = () => {
-    navigate("/");
-  };
-
   return (
     <div className="bg-gray-900 text-white min-h-screen p-4 text-sm">
       <div className="flex items-center mb-4">
         <button
-          onClick={handleBack}
+          onClick={() => navigate("/")}
           className="text-xl text-yellow-400 mr-3"
         >
           <AiOutlineArrowLeft />
@@ -91,17 +86,28 @@ const UserBookings = () => {
                 <button
                   onClick={() => handleAcceptBooking(booking._id)}
                   className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded"
-                >
-                  Accept
-                </button>
+                >Accept</button>
               )}
               <button
                 onClick={() => handleDeleteBooking(booking._id)}
                 className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
+              >Delete</button>
+              <button
+                onClick={() => setChatOpenFor(booking.userId._id)}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded-full relative"
               >
-                Delete
+                <FaComments />
               </button>
             </div>
+
+            {chatOpenFor === booking.userId._id && (
+              <ChatPopup
+                isOpen={chatOpenFor === booking.userId._id}
+                onClose={() => setChatOpenFor(null)}
+                userId={booking.userId._id}
+                providerId={providerId}
+              />
+            )}
           </div>
         ))
       )}

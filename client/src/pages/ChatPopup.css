@@ -1,0 +1,105 @@
+/* Overlay for the popup background */
+.chat-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it appears above other elements */
+}
+
+/* Styling for the chat popup */
+.chat-popup {
+  width: 400px;
+  padding: 20px;
+  background: linear-gradient(135deg, #4CAF50, #81C784); /* Green gradient */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header styling */
+.chat-popup .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.chat-popup .header button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.chat-popup .header button:hover {
+  color: #FFEB3B; /* Change color on hover */
+}
+
+/* Messages styling */
+.chat-popup .messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 200px;
+  margin-bottom: 10px;
+}
+
+.chat-popup .messages .sent {
+  text-align: right;
+  margin-bottom: 10px;
+  background-color: #1e0d8a; /* Darker green for sent messages */
+  padding: 8px;
+  border-radius: 12px;
+  max-width: 75%;
+  margin-left: auto;
+}
+
+.chat-popup .messages .received {
+  text-align: left;
+  margin-bottom: 10px;
+  background-color: #7d1b07; /* Darker green for received messages */
+  padding: 8px;
+  border-radius: 12px;
+  max-width: 75%;
+  margin-right: auto;
+}
+
+/* Input area */
+.chat-popup .input-area {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-popup .input-area input {
+  flex-grow: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.chat-popup .input-area button {
+  background-color: #2E7D32; /* Slightly darker green for send button */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-popup .input-area button:hover {
+  background-color: #1B5E20; /* Darker green on hover */
+}

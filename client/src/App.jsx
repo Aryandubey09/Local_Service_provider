@@ -1,30 +1,29 @@
-import React from 'react'
-import "./app.css"
-import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Category from "./components/Category";
+import React from 'react';
+import './app.css';
+import { Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ProviderDashboard from './pages/ProviderDashboard';
+// Importing Pages and Components
+import Home from './pages/Home';
+import Category from './components/Category';
 import UserBookings from './components/UserBookings';
 import MyProfile from './pages/MyProfile';
+import ProviderDashboard from './pages/ProviderDashboard';
 
 function App() {
   return (
     <>
-      <ToastContainer /> {/* ✅ Correct place */}
+      {/* Toast Notifications Container */}
+      <ToastContainer />
 
+      {/* Routes for different pages */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/user-bookings" element={<UserBookings />} />
         <Route path="/category/:categoryName" element={<Category />} />
         <Route path="/provider-dashboard" element={<ProviderDashboard />} />
         <Route path="/my-profile" element={<MyProfile />} />
-
       </Routes>
     </>
   );

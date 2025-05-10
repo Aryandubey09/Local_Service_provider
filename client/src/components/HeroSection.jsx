@@ -12,7 +12,9 @@ function HeroSection() {
   };
 
   return (
-    <section className="bg-blue-100 py-13 px-6 text-center">
+    <section className="bg-gray-400
+
+ py-13 px-6 text-center">
       <h1 className="text-4xl font-bold mb-4">Find Trusted Local Professionals</h1>
       <div className="flex justify-center gap-4 flex-wrap">
         <input
