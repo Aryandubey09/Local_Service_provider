@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000"); // Your backend
+const socket = io("https://local-service-provider-5.onrender.com"); // Your backend
 
 const ChatPopup = ({ userId, providerId, onClose }) => {
   const [messages, setMessages] = useState([]);

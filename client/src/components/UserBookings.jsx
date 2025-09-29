@@ -24,7 +24,7 @@ const UserBookings = () => {
     if (!providerId) return;
     const fetchBookings = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/bookings/${providerId}`);
+        const response = await axios.get(`https://local-service-provider-5.onrender.com/api/bookings/${providerId}`);
         setBookings(response.data);
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -35,7 +35,7 @@ const UserBookings = () => {
 
   const handleAcceptBooking = async (bookingId) => {
     try {
-      await axios.put(`http://localhost:5000/api/bookings/${bookingId}/accept`);
+      await axios.put(`https://local-service-provider-5.onrender.com/api/bookings/${bookingId}/accept`);
       setBookings((prev) =>
         prev.map((b) => b._id === bookingId ? { ...b, status: "accepted" } : b)
       );
@@ -46,7 +46,7 @@ const UserBookings = () => {
 
   const handleDeleteBooking = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/bookings/${bookingId}`);
+      await axios.delete(`https://local-service-provider-5.onrender.com/api/bookings/${bookingId}`);
       setBookings((prev) => prev.filter((b) => b._id !== bookingId));
     } catch (err) {
       console.error("Error deleting booking:", err);

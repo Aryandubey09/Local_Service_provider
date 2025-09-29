@@ -22,7 +22,7 @@ const ProviderDashboard = () => {
 
     const fetchBookings = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/bookings/user/${user._id}`);
+        const response = await axios.get(`https://local-service-provider-5.onrender.com/api/bookings/user/${user._id}`);
         setBookings(response.data);
       } catch (err) {
         console.error("Error fetching customer bookings:", err);
@@ -35,7 +35,7 @@ const ProviderDashboard = () => {
   // Function to cancel a booking
  const cancelBooking = async (bookingId) => {
   try {
-    await axios.delete(`http://localhost:5000/api/bookings/${bookingId}`);
+    await axios.delete(`https://localhost:5000/api/bookings/${bookingId}`);
     // Remove the canceled booking from the state
     setBookings((prevBookings) => prevBookings.filter((booking) => booking._id !== bookingId));
   } catch (err) {

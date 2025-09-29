@@ -22,7 +22,7 @@ const SignInModel = ({ isOpen, onClose, onLogin }) => {
     e.preventDefault();
     try {
       if (isLoginMode) {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await axios.post("https://local-service-provider-5.onrender.com/api/auth/login", {
           email,
           password,
         });
@@ -39,7 +39,7 @@ const SignInModel = ({ isOpen, onClose, onLogin }) => {
 
         onClose(); // Close modal after login
       } else {
-        await axios.post("http://localhost:5000/api/auth/signup", {
+        await axios.post("https://local-service-provider-5.onrender.com/api/auth/signup", {
           fullName,
           phone,
           email,

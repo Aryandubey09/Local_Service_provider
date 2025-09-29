@@ -24,7 +24,7 @@ const CategoryPage = () => {
     const fetchProviders = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/providers/${categoryName.toLowerCase()}`
+          `https://local-service-provider-5.onrender.com/api/providers/${categoryName.toLowerCase()}`
         );
         setProviders(data);
         setFilteredProviders(data);
@@ -61,7 +61,7 @@ const CategoryPage = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/bookings", {
+      await axios.post("https://local-service-provider-5.onrender.com/api/bookings", {
         providerId,
         userId: storedUser._id,
         date: selectedDate,

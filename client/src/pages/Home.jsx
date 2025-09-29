@@ -34,7 +34,7 @@ const Home = () => {
     const fetchCoins = async () => {
       if (!userId) return;
       try {
-        const res = await axios.get(`http://localhost:5000/api/bookings/user/${userId}/coins`);
+        const res = await axios.get(`https://local-service-provider-5.onrender.com/api/bookings/user/${userId}/coins`);
         setCoins(res.data.coins);
       } catch (err) {
         console.error("Error fetching coins:", err);
@@ -63,7 +63,7 @@ const Home = () => {
   const handleBook = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/bookings`,
+        `https://local-service-provider-5.onrender.com/api/bookings`,
         { userId },
         { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
       );
