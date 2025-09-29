@@ -53,11 +53,11 @@ const CategoryPage = () => {
 
   const handleBooking = async (providerId) => {
     if (!selectedDate) {
-      alert("Please select a date.");
+     toast.error("Please select date.");
       return;
     }
     if (!storedUser?._id) {
-      alert("Please log in first.");
+      toast.error("Please log in first .");
       return;
     }
     try {
@@ -118,76 +118,81 @@ const CategoryPage = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProviders.map((pro) => (
-          <div
-  key={pro._id}
-  className={`p-4 rounded-2xl shadow-xl transition-transform transform hover:scale-105
-    bg-gradient-to-br ${
-      pro._id.length % 2 === 0
-        ? "from-[#a1c4fd] to-[#c2e9fb]"  // blue watercolor
-        : "from-[#fbc2eb] to-[#a6c1ee]"  // pink watercolor
-    }`}
->
-  <h3 className="text-lg font-bold text-gray-900 mb-2">{pro.fullName}</h3>
-  <p className="text-sm text-gray-800">📧 {pro.email}</p>
-  <p className="text-sm text-gray-800">📍 {pro.address}</p>
-  <p className="text-sm text-gray-800">📞 {pro.phone}</p>
+            <div
+              key={pro._id}
+              className={`p-4 rounded-2xl shadow-xl transition-transform transform hover:scale-105
+                bg-gradient-to-br ${
+                  pro._id.length % 2 === 0
+                    ? "from-[#a1c4fd] to-[#c2e9fb]" // blue watercolor
+                    : "from-[#fbc2eb] to-[#a6c1ee]" // pink watercolor
+                }`}
+            >
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{pro.fullName}</h3>
+              <p className="text-sm text-gray-800">📧 {pro.email}</p>
+              <p className="text-sm text-gray-800">📍 {pro.address}</p>
+              <p className="text-sm text-gray-800">📞 {pro.phone}</p>
 
-  {!bookedProviders.has(pro._id) && selectedProviderId === pro._id && (
-    <div className="mb-3 mt-2">
-      <div className="flex items-center border rounded-md px-3 py-2 bg-white shadow-sm">
-        <span className="mr-2 text-gray-500">📅</span>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          placeholderText="Select date"
-          className="outline-none w-full text-gray-800"
-        />
-      </div>
-    </div>
-  )}
+              {!bookedProviders.has(pro._id) && selectedProviderId === pro._id && (
+                <div className="mb-3 mt-2">
+                  <div className="flex items-center border rounded-md px-3 py-2 bg-white shadow-sm">
+                    <span className="mr-2 text-gray-500">📅</span>
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={(date) => setSelectedDate(date)}
+                      placeholderText="Select date"
+                      className="outline-none w-full text-gray-800"
+                    />
+                  </div>
+                </div>
+              )}
 
-  <div className="mt-3 flex flex-wrap items-center gap-2">
-    {bookedProviders.has(pro._id) ? (
-      <button
-        className="bg-gray-400 text-white py-2 px-4 rounded-md cursor-not-allowed"
-        disabled
-      >
-        Booked
-      </button>
-    ) : !isProvider && selectedProviderId === pro._id ? (
-      <button
-        onClick={() => handleBooking(pro._id)}
-        className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-      >
-        Confirm Booking
-      </button>
-    ) : !isProvider && (
-      <button
-        onClick={() => setSelectedProviderId(pro._id)}
-        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-      >
-        Book
-      </button>
-    )}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {bookedProviders.has(pro._id) ? (
+                  <button
+                    className="bg-gray-400 text-white py-2 px-4 rounded-md cursor-not-allowed"
+                    disabled
+                  >
+                    Booked
+                  </button>
+                ) : !isProvider && selectedProviderId === pro._id ? (
+                  <button
+                    onClick={() => handleBooking(pro._id)}
+                    className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                  >
+                    Confirm Booking
+                  </button>
+                ) : !isProvider && (
+                  <button
+                    onClick={() => setSelectedProviderId(pro._id)}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                  >
+                    Book
+                  </button>
+                )}
 
-    <button
-      onClick={() => setChatOpenFor(pro._id)}
-      className="bg-yellow-400 text-white p-2 rounded-full hover:bg-yellow-500 transition"
-    >
-      <FaComments />
-    </button>
-  </div>
+                <button
+                  onClick={() => {
+                    if (!storedUser?._id) {
+                      toast.error("Please log in first to start chat.");
+                      return;
+                    }
+                    setChatOpenFor(pro._id);
+                  }}
+                  className="bg-yellow-400 text-white p-2 rounded-full hover:bg-yellow-500 transition"
+                >
+                  <FaComments />
+                </button>
+              </div>
 
-  {chatOpenFor === pro._id && (
-    <ChatPopup
-      isOpen={chatOpenFor === pro._id}
-      onClose={() => setChatOpenFor(null)}
-      userId={storedUser._id}
-      providerId={pro._id}
-    />
-  )}
-</div>
-
+              {chatOpenFor === pro._id && (
+                <ChatPopup
+                  isOpen={chatOpenFor === pro._id}
+                  onClose={() => setChatOpenFor(null)}
+                  userId={storedUser._id}
+                  providerId={pro._id}
+                />
+              )}
+            </div>
           ))}
         </div>
       )}
